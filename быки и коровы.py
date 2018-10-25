@@ -11,9 +11,6 @@ print("""Игрок делает первую попытку отгадать ч
 Игрок вводит комбинации одну за другой, пока не отгадает всю последовательность.\n""")
 
 
-number = random.randrange(1000, 9999, 1)
-
-
 def number_input():
     number_user = None  # input ("Введите четырёхзначное число: ")
     while True:
@@ -21,7 +18,7 @@ def number_input():
             number_user = input("Введите четырёхзначное число: ")
         try:
             number_user = int(number_user)
-        except:
+        except TypeError:
             None
         if type(number_user) is int and number_user not in range(1000, 10000):
             number_user = input("Введите ЧЕТЫРЁХзначное число: ")
@@ -32,18 +29,19 @@ def number_input():
     return int(number_user)
 
 
+number = str(3534)  # str(random.randrange(1000, 9999))
 for move in range(0, 10):
-    if move != 8:
-        print("На игру дано 10 ходов. \nЭто {} ход. \nОсталось {} ходов".format(move + 1, 9 - move))
+    if move < 6:
+        print("На игру дано 10 ходов. \nОсталось {} ходов".format(10 - move))
+    elif 6 <= move <9:
+        print("На игру дано 10 ходов. \nОсталось {} хода".format(10 - move))
     else:
-        print("На игру дано 10 ходов. \nЭто 9 ход. \nОстался 1 ход")
+        print("На игру дано 10 ходов. \nОстался 1 ход")
     usernumber = number_input()
-    number = str(number)
     usernumber = str(usernumber)
     cow = 0
     bull = 0
     for i in range(len(number)):
-        n = 0
         trial_number = usernumber
         for n in range(len(usernumber)):
             if trial_number[n] == number[i] and i == n:
@@ -74,4 +72,4 @@ for move in range(0, 10):
     if bull == 4:
         break
 else:
-    print("\nПОТРАЧЕНО")
+    print("\nПОТРАЧЕНО\nОтвет:", number)
