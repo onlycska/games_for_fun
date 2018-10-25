@@ -38,7 +38,6 @@ def my_guests():
                 print("\nIt's not a name\n".upper())
             except ValueError:
                 hookah_users.append(guest)
-    print(len(hookah_users))
     return hookah_users
 
 
