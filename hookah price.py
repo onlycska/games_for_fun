@@ -9,8 +9,6 @@ DEFAULT_BOWL_MASS = 15.0  # how much tobacco at once can I use with my bowl
 PACK_MASS = 50.0  # standard mass of tobacco pack
 
 
-
-
 def main():
     """
     the instruction creates and updates tables in database
@@ -62,28 +60,7 @@ def my_guests(ex_guests):
     This instruction identifies guests who used tobacco and hookah coal that I bought.
     hookah_users - guests who smoked hookah
     """
-    # hookah_users = []
-    # guest = input("Oleg and Tanya smoked hookah, [] - yes, [...] - no: ")
-    #
-    # if guest == "":
-    #     hookah_users.extend(("Oleg", "Tanya"))
-    #
-    # while True:
-    #     guest = input("Enter name of guest (use literals), [] - over: ")
-    #     if guest == "":
-    #         if len(hookah_users) == 0:
-    #             print("\nIt has to be one guest at least\n")
-    #         else:
-    #             print("\nName entry is over\n")
-    #             break
-    #     else:
-    #         try:
-    #             match = re.match(r"^[a-zA-Zа-яА-Я]+$", guest)[0]
-    #         except TypeError:
-    #             print("\nIt's not a name\n".upper())
-    #         else:
-    #             print(match)
-    #             hookah_users.append(match)
+
     hookah_users = []
     available_guests_names = []
 
@@ -107,19 +84,15 @@ def my_guests(ex_guests):
         if should_update_collection.lower() == "y" or should_update_collection.lower() == "н":
             while True:
                 try:
-                    new_tobacco = input("Enter tobacco name: ")
-                    if new_tobacco == "":
+                    new_guest = input("Enter guest name: ")
+                    if new_guest == "":
                         raise TypeError
-                    re.match(r"^[a-zA-Zа-яА-Я]+$", new_tobacco)
+                    re.match(r"^[a-zA-Zа-яА-Я]+$", new_guest)
+                    available_guests_names.append(new_guest)
+                    break
                 except TypeError:
                     print("\nThis is not a name of guest\n".upper())
                     continue
-                # try:
-                #     tobacco_price = int(input("Enter {} price: ".format(new_tobacco)))
-                # except ValueError:
-                #     print("\nThis is not a number\n".upper())
-                # else:
-                #     ex_guests.insert_one({"name": new_tobacco, "price": tobacco_price})
         else:
             if count != 0:
                 break
@@ -127,14 +100,13 @@ def my_guests(ex_guests):
                 print("\nit cannot be 0 guests in database\n".upper())
                 continue
 
-    for i in range(count):
+    for i in range(len(available_guests_names)):
         guest_name = input("Did {} smoked the tobacco ? [] - yes, [...] - no: ".format(available_guests_names[i]))
         if guest_name == "":
             hookah_users.append(available_guests_names[i])
         else:
             continue
-    print(hookah_users)
-    raise SystemExit()
+
     return hookah_users
 
 
@@ -179,6 +151,8 @@ def smoked_tobacco(available_tobaccos_collection):
                     print("\nThis is not a number\n".upper())
                 else:
                     available_tobaccos_collection.insert_one({"name": new_tobacco, "price": tobacco_price})
+                    available_tobaccos_names.append(new_tobacco)
+                    break
         else:
             if count != 0:
                 break
@@ -186,7 +160,7 @@ def smoked_tobacco(available_tobaccos_collection):
                 print("it cannot be 0 tobaccos in database".upper())
                 continue
 
-    for i in range(count):
+    for i in range(len(available_tobaccos_names)):
         used_tobacco_name = input("Did you smoke the tobacco {}? [] - yes, [...] - no: ".format
                                   (available_tobaccos_names[i]))
         if used_tobacco_name == "":
@@ -227,7 +201,7 @@ def smoked_tobacco(available_tobaccos_collection):
             counter = 0
         else:
             counter += 1
-    # print(used_tobaccos)
+
     return used_tobaccos
 
 
