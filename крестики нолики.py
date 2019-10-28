@@ -9,7 +9,8 @@ class Calculations:
         self.table_size = table_size
 
     @staticmethod
-    def win_checker(clicked_buttons, table_size, all_butons=[]):
+    def win_checker(clicked_buttons, table_size, all_buttons=[]):
+        # метод, проверящий закончилась ли игра победой/ничьей
         print("win_checker started")
         print(clicked_buttons)
         win = False
@@ -18,14 +19,15 @@ class Calculations:
             win = True
         elif set([table_size*k-k+1 for k in range(1, table_size+1)]).issubset(clicked_buttons):
             win = True
-        for i in range(table_size):
-            # проверка комбинаций нажатых ячеек, необходимых для победы - горизонтальные и вертикальные ряды
-            if set(range(table_size*i+1, table_size*(i+1)+1)).issubset(clicked_buttons):
-                win = True
-                break
-            elif set([table_size*k+i+1 for k in range(table_size)]).issubset(clicked_buttons):
-                win = True
-                break
+        else:
+            for i in range(table_size):
+                # проверка комбинаций нажатых ячеек, необходимых для победы - горизонтальные и вертикальные ряды
+                if set(range(table_size*i+1, table_size*(i+1)+1)).issubset(clicked_buttons):
+                    win = True
+                    break
+                elif set([table_size*k+i+1 for k in range(table_size)]).issubset(clicked_buttons):
+                    win = True
+                    break
         if win:
             print("winner defined")
             global first_player_move
@@ -34,7 +36,7 @@ class Calculations:
         elif len(clicked_buttons) == math.ceil(table_size**2/2):
             # для определения ничьей нужно убедиться, что все клетки были выбраны
             draw_define = 0
-            for button in all_butons:
+            for button in all_buttons:
                 if button["text"]:
                     draw_define += 1
                     print(draw_define)
@@ -46,6 +48,7 @@ class Calculations:
 
     @staticmethod
     def change_size(old_size, new_size):
+        # изменение размера окна: 3х3 или 4х4
         if str(old_size) in new_size:
             pass
         else:
@@ -59,10 +62,11 @@ class Calculations:
 
     @staticmethod
     def prepare_for_win_checker(list_of_clicked_buttons, button_number, table_size, buttons):
+        # проверка нужно ли проверять ничейный результат; обновление переменных
         global first_player_move
         list_of_clicked_buttons.append(button_number)
         if len(list_of_clicked_buttons) > table_size - 1:
-            Calculations.win_checker(list_of_clicked_buttons, table_size, buttons)
+            Calculations.win_checker(clicked_buttons=list_of_clicked_buttons, table_size=table_size, all_buttons=buttons)
         first_player_move = not first_player_move
 
 
@@ -81,6 +85,7 @@ class TableForGame(tk.Frame):
         self.buttons_creation(first_fight=True)
 
     def buttons_creation(self, first_fight=False, repeat_fight=False):
+        # создание интерфейса программы или его обновление
         if first_fight:
             self.who_move_label.grid(row=1, column=0, columnspan=self.table_size)
             for i in range(self.table_size**2):
@@ -109,7 +114,7 @@ class TableForGame(tk.Frame):
                                               command=lambda: Calculations.change_size(self.table_size,
                                                                                        change_table_size.get()))
             btn_change_table_size.grid(row=self.table_size + 3, column=1)
-        if repeat_fight:
+        elif repeat_fight:
             global crosses, nulls
             crosses = []
             nulls = []
@@ -120,6 +125,7 @@ class TableForGame(tk.Frame):
         self.score_label.config(text=score_text_for_label)
 
     def change_button_text(self, clicked_button):
+        # смена текста в нажатой юзером кнопке - на х или о
         global first_player_move
         button_number = str(clicked_button).split("n")
         print(button_number)
@@ -151,10 +157,17 @@ class TableForGame(tk.Frame):
 
 
 if __name__ == "__main__":
+    # переменная для определения очерёдности хода
     first_player_move = True
+
+    # списки с нажатыми кнопками - крестики и нолики
     crosses = []
     nulls = []
+
+    # словарь для отображения счёта в главном окне
     score = dict([("First player", 0), ("Second player", 0)])
+
+    # начало игры с полем 3х3
     main_window = tk.Tk()
     app = TableForGame(main_window, 3)
     main_window.mainloop()
