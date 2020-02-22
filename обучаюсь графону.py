@@ -460,7 +460,7 @@ if __name__ == "__main__":
     connect = base64.standard_b64decode("bW9uZ29kYjovL2hvb2thaDoxMzAzOTdvbGVnQGRz"
                                         "MjQ3MjIzLm1sYWIuY29tOjQ3MjIzL29ubHljc2th")
     connect = connect.decode('utf-8')
-    client = MongoClient(connect)
+    client = MongoClient(connect, retryWrites=False)
     db = client["onlycska"]
     events = db["events"]
     tobaccos_db = db["tobaccos"]
@@ -469,6 +469,6 @@ if __name__ == "__main__":
     app = Main(root)
     app.pack()
     root.title("Hookah price")
-    root.geometry("650x600+300+200")
+    root.geometry("650x600+200+100")
     root.resizable(False, True)
     root.mainloop()
